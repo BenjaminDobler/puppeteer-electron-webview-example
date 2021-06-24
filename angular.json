@@ -1,0 +1,191 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "pup-renderer": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "sass"
+        }
+      },
+      "root": "projects/pup-renderer",
+      "sourceRoot": "projects/pup-renderer/src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@richapps/build-angular:browser",
+          "options": {
+            "outputPath": "dist/pup-renderer",
+            "index": "projects/pup-renderer/src/index.html",
+            "main": "projects/pup-renderer/src/main.ts",
+            "polyfills": "projects/pup-renderer/src/polyfills.ts",
+            "tsConfig": "projects/pup-renderer/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "projects/pup-renderer/src/favicon.ico",
+              "projects/pup-renderer/src/assets"
+            ],
+            "styles": [
+              "projects/pup-renderer/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "projects/pup-renderer/src/environments/environment.ts",
+                  "with": "projects/pup-renderer/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "pup-renderer:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "pup-renderer:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "pup-renderer:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/pup-renderer/src/test.ts",
+            "polyfills": "projects/pup-renderer/src/polyfills.ts",
+            "tsConfig": "projects/pup-renderer/tsconfig.spec.json",
+            "karmaConfig": "projects/pup-renderer/karma.conf.js",
+            "assets": [
+              "projects/pup-renderer/src/favicon.ico",
+              "projects/pup-renderer/src/assets"
+            ],
+            "styles": [
+              "projects/pup-renderer/src/styles.sass"
+            ],
+            "scripts": []
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/pup-renderer/tsconfig.app.json",
+              "projects/pup-renderer/tsconfig.spec.json",
+              "projects/pup-renderer/e2e/tsconfig.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        },
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "projects/pup-renderer/e2e/protractor.conf.js",
+            "devServerTarget": "pup-renderer:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "pup-renderer:serve:production"
+            }
+          }
+        }
+      }
+    },
+    "pup-electron": {
+      "projectType": "application",
+      "root": "projects/electron",
+      "architect": {
+        "build": {
+          "builder": "@richapps/ngtron:build",
+          "options": {
+            "rendererTargets": [
+              "pup-renderer:build"
+            ],
+            "mainTarget": "pup-main:build",
+            "outputPath": "dist/pup-electron",
+            "rendererOutputPath": "dist/pup-electron/renderers",
+            "package": "projects/pup-electron/package.json"
+          }
+        },
+        "serve": {
+          "builder": "@richapps/ngtron:serve",
+          "options": {
+            "buildTarget": "pup-electron:build"
+          }
+        },
+        "package": {
+          "builder": "@richapps/ngtron:package",
+          "options": {
+            "buildTarget": "pup-electron:build",
+            "packagerConfig": {
+              "mac": [
+                "zip",
+                "dmg"
+              ],
+              "config": {
+                "appId": "some.id",
+                "npmRebuild": false,
+                "asar": false,
+                "directories": {
+                  "app": "dist/pup-electron",
+                  "output": "dist/pup-electron-package",
+                  "buildResources": "projects/pup-electron/electronResources"
+                },
+                "electronVersion": "4.0.0"
+              }
+            }
+          }
+        }
+      }
+    },
+    "pup-main": {
+      "projectType": "application",
+      "root": "projects/pup-main",
+      "sourceRoot": "projects/pup-main/src",
+      "architect": {
+        "build": {
+          "builder": "@richapps/ngnode:build",
+          "options": {
+            "outputPath": "dist/pup-main",
+            "main": "projects/pup-main/src/main.ts",
+            "tsConfig": "projects/pup-main/tsconfig.json"
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "pup-renderer"
+}

@@ -1,0 +1,8 @@
+{
+  "version": "0.0.0",
+  "name": "myapp",
+  "main": "",
+  "dependencies": {
+    "puppeteer-core": "^5.5.0"
+  }
+}

@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100vw;
+  height: 100vh;
+}
+
+webview {
+  height: 100%;
+  width: 100%;
+}
+
+.controls {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
